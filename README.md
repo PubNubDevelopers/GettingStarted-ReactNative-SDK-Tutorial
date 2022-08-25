@@ -8,7 +8,7 @@ Create 1:1 private chat rooms, group chats, or mega chats for large scale events
 
 > For the sake of simplicity, this application will only focus on a single 'group chat' room
 
-![Screenshot](https://raw.githubusercontent.com/PubNubDevelopers/GettingStarted-ReactNative-SDK-Tutorial/main/media/combined_small.png)
+![Screenshot](https://raw.githubusercontent.com/PubNubDevelopers/GettingStarted-ReactNative-SDK-Tutorial/main/media/combined_small_white.png)
 
 ## Demo
 
