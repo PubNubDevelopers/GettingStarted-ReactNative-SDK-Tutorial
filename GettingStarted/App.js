@@ -185,10 +185,7 @@ const App: () => Node = () => {
             setMessages(msgs => [
               ...msgs,
               {
-                //id: message.timetoken,
-                id: Math.random()
-                  .toString(16)
-                  .substr(2),
+                id: message.timetoken,
                 author: message.uuid,
                 content: message.message,
                 timetoken: message.timetoken,
