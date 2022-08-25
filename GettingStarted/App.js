@@ -36,12 +36,7 @@ var deviceId = 'ChangeMe'
 //  type of conversation, e.g. each 1:1 chat would have its own channel, named appropriately.
 const groupChatChannel = 'group_chat'
 
-//  Create PubNub configuration and instantiate the PubNub object, used to communicate with PubNub
-const pubnub = new PubNub({
-  subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
-  publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-  uuid: 'ChangeMe',
-})
+//  TUTORIAL STEP 2a (1/2) code goes here
 
 const App: () => Node = () => {
   //  Note: Application does not look different in dark mode
@@ -70,13 +65,17 @@ const App: () => Node = () => {
       } else {
         //  Subscribe to the pre-defined channel representing this chat group.  This will allow us to receive messages
         //  and presence events for the channel (what other users are in the room)
-        pubnub.subscribe({channels: [groupChatChannel], withPresence: true})
+
+        //  TUTORIAL STEP 2b code goes here (1/2)
+
       }
     } else if (newState == 'background') {
       //  application is in the background
       //  This getting started application is set up to unsubscribe from all channels when the app goes into the background.
       //  This is good to show the principles of presence but you don't need to do this in a production app if it does not fit your use case.
-      pubnub.unsubscribe({channels: [groupChatChannel]})
+
+      //  TUTORIAL STEP 2b code goes here (2/2)
+
     }
   }
 
@@ -85,8 +84,8 @@ const App: () => Node = () => {
       //  Create a device-specific DeviceId to represent this device and user, so PubNub knows who is connecting.
       //  More info: https://support.pubnub.com/hc/en-us/articles/360051496532-How-do-I-set-the-UUID-
       //  All Android IDs are user-resettable but are still appropriate for use here.
-      deviceId = await DeviceInfo.getUniqueId()
-      pubnub.setUUID(deviceId)
+      
+      //  TUTORIAL STEP 2a code goes here (2/2)
 
       //  In order to receive object UUID events (in the addListener) it is required to set our
       //  membership using the Object API.
@@ -115,107 +114,25 @@ const App: () => Node = () => {
 
     const subscription = AppState.addEventListener('change', handleChange)
     if (pubnub) {
-      const listener = {
-        //  A message is received from PubNub.  This is the entry point for all messages on all
-        //  channels or channel groups, though this application only uses a single channel.
-        message: receivedMsg => {
-          setMessages(msgs => [
-            ...msgs,
-            {
-              id: receivedMsg.timetoken,
-              author: receivedMsg.publisher,
-              content: receivedMsg.message,
-              timetoken: receivedMsg.timetoken,
-            },
-          ])
-        },
-        //  Be notified that a 'presence' event has occurred.  I.e. somebody has left or joined
-        //  the channel.  This is similar to the earlier hereNow call but this API will only be
-        //  invoked when presence information changes, meaning you do NOT have to call hereNow
-        //  periodically.
-        presence: presenceMsg => {
-          if (presenceMsg.action == 'join') {
-            addMember(presenceMsg.uuid)
-          } else if (presenceMsg.action == 'leave') {
-            removeMember(presenceMsg.uuid)
-          } else if (presenceMsg.action == 'interval') {
-            //  'join' and 'leave' will work up to the ANNOUNCE_MAX setting (defaults to 20 users)
-            //  Over ANNOUNCE_MAX, an 'interval' message is sent.  More info: https://www.pubnub.com/docs/presence/presence-events#interval-mode
-            //  The below logic requires that 'Presence Deltas' be defined for the keyset, you can do this from the admin dashboard
-            if (presenceMsg['join'] != undefined) {
-              for (var i = 0; i < presenceMsg['join'].length; i++) {
-                addMember(presenceMsg['join'][i])
-              }
-            }
-            if (presenceMsg['leave'] != undefined) {
-              for (var i = 0; i < presenceMsg['leave'].length; i++) {
-                removeMember(presenceMsg['leave'][i])
-              }
-            }
-          }
-        },
-        //  Whenever Object meta data is changed, an Object event is received.
-        //  See: https://www.pubnub.com/docs/chat/sdks/users/setup
-        //  Use this to be notified when other users change their friendly names
-        objects: objMsg => {
-          if (objMsg.message.type == 'uuid') {
-            replaceMemberName(objMsg.message.data.id, objMsg.message.data.name)
-          }
-        },
-      }
 
-      //  Applications receive various types of information from PubNub through a 'listener'
-      pubnub.addListener(listener)
+      //  TUTORIAL STEP 2d code goes here
 
+      //  TUTORIAL STEP 2e code goes above, in the code added in step 2d
+
+      //  TUTORIAL STEP 2f code goes above (1/2), in the code added in step 2d
+
+      //  TUTORIAL STEP 2i code goes above (2/2), in the code added in step 2d
+      
       //  When the application is first loaded, it is common to load any recent chat messages so the user
       //  can get caught up with conversations they missed.  Every application will handle this differently
       //  but here we just load the 8 most recent messages
-      pubnub
-        .fetchMessages({
-          channels: [groupChatChannel],
-          includeUUID: true,
-          count: 8,
-        })
-        .then(historicalMessages => {
-          var historicalMessagesArray =
-            historicalMessages['channels'][groupChatChannel]
-          for (var i = 0; i < historicalMessagesArray.length; i++) {
-            var message = historicalMessagesArray[i]
-            lookupMemberName(message.uuid)
-            setMessages(msgs => [
-              ...msgs,
-              {
-                //id: message.timetoken,
-                id: Math.random()
-                  .toString(16)
-                  .substr(2),
-                author: message.uuid,
-                content: message.message,
-                timetoken: message.timetoken,
-              },
-            ])
-          }
-        })
 
+      //  TUTORIAL STEP 2g code goes here
+      
       //  PubNub has an API to determine who is in the room.  Use this call sparingly since you are only ever likely to
       //  need to know EVERYONE in the room when the UI is first created.
-      pubnub
-        .hereNow({
-          channels: [groupChatChannel],
-          includeUUIDs: true,
-        })
-        .then(devicesHereNow => {
-          try {
-            var occupants =
-              devicesHereNow['channels'][groupChatChannel]['occupants']
 
-            occupants.forEach(function (member, index) {
-              addMember(occupants[index].uuid)
-            })
-          } catch (error) {
-            //  Error executing hereNow
-          }
-        })
+      //  TUTORIAL STEP 2f code goes here (2/2)
 
       return () => {
         subscription.remove()
@@ -272,24 +189,9 @@ const App: () => Node = () => {
   //  (along with other common fields like email and profileUrl), it makes the process straight forward
   const lookupMemberName = async deviceIdentifier => {
     if (friendlyNames[deviceIdentifier] === undefined) {
-      try {
-        const result = await pubnub.objects.getUUIDMetadata({
-          uuid: deviceIdentifier,
-        })
-        var newFriendlyNames = friendlyNames
-        newFriendlyNames[deviceIdentifier] = result.data.name
-        setFriendlyNames({...newFriendlyNames})
 
-        if (deviceIdentifier == deviceId) {
-          setMyFriendlyName(result.data.name)
-        }
+    //  TUTORIAL STEP 2i code goes here (1/2)
 
-        //  Force an update of the messages view with the new name
-        setMessages(msgs => [...msgs])
-      } catch (error) {
-        //  This happens if the UUID is not known on the server which is
-        //  a common occurance so just swallow this
-      }
     }
   }
 
@@ -300,15 +202,9 @@ const App: () => Node = () => {
   const handleSaveFriendlyName = async () => {
     if (friendlyNameEditable) {
       //  Save the current value
-      try {
-        const result = await pubnub.objects.setUUIDMetadata({
-          data: {
-            name: myFriendlyName,
-          },
-        })
-      } catch (status) {
-        console.log('Save friendly name status: ' + status)
-      }
+
+      //  TUTORIAL STEP 2h code goes here
+
       setFriendlyNameButtonText('Edit')
       setFriendlyNameEditable(false)
     } else {
