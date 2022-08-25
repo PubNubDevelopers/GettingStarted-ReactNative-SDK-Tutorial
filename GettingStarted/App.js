@@ -84,7 +84,7 @@ const App: () => Node = () => {
       //  Create a device-specific DeviceId to represent this device and user, so PubNub knows who is connecting.
       //  More info: https://support.pubnub.com/hc/en-us/articles/360051496532-How-do-I-set-the-UUID-
       //  All Android IDs are user-resettable but are still appropriate for use here.
-      
+
       //  TUTORIAL STEP 2a code goes here (2/2)
 
       //  In order to receive object UUID events (in the addListener) it is required to set our
@@ -122,13 +122,13 @@ const App: () => Node = () => {
       //  TUTORIAL STEP 2f code goes above (1/2), in the code added in step 2d
 
       //  TUTORIAL STEP 2i code goes above (2/2), in the code added in step 2d
-      
+
       //  When the application is first loaded, it is common to load any recent chat messages so the user
       //  can get caught up with conversations they missed.  Every application will handle this differently
       //  but here we just load the 8 most recent messages
 
       //  TUTORIAL STEP 2g code goes here
-      
+
       //  PubNub has an API to determine who is in the room.  Use this call sparingly since you are only ever likely to
       //  need to know EVERYONE in the room when the UI is first created.
 
@@ -191,7 +191,7 @@ const App: () => Node = () => {
     if (friendlyNames[deviceIdentifier] === undefined) {
 
     //  TUTORIAL STEP 2i code goes here (1/2)
-
+ 
     }
   }
 
@@ -224,8 +224,8 @@ const App: () => Node = () => {
     // Clear the input field.
     setInput('')
 
-    // Publish our message to the channel `chat`
-    pubnub.publish({channel: groupChatChannel, message: input})
+    //  TUTORIAL STEP 2c code goes here
+
   }
 
   return (
