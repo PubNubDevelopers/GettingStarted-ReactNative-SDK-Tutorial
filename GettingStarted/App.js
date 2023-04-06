@@ -88,8 +88,8 @@ const App: () => Node = () => {
       deviceId = await DeviceInfo.getUniqueId()
       pubnub.setUUID(deviceId)
 
-      //  In order to receive object UUID events (in the addListener) it is required to set our
-      //  membership using the Object API.
+      //  In order to receive App Context UUID events (in the addListener) it is required to set our
+      //  membership using the App Context API.
       pubnub.objects.setMemberships({
         channels: [groupChatChannel],
       })
@@ -154,7 +154,7 @@ const App: () => Node = () => {
             }
           }
         },
-        //  Whenever Object meta data is changed, an Object event is received.
+        //  Whenever App Context meta data is changed, an App Context event is received.
         //  See: https://www.pubnub.com/docs/chat/sdks/users/setup
         //  Use this to be notified when other users change their friendly names
         objects: objMsg => {
@@ -263,9 +263,9 @@ const App: () => Node = () => {
     setMessages(msgs => [...msgs])
   }
 
-  //  The 'master record' for each device's friendly name is stored in PubNub Object storage.
+  //  The 'master record' for each device's friendly name is stored in PubNub App Context storage.
   //  This avoids the application defining its own server storage or trying to keep track of all
-  //  friendly names on every device.  Since PubNub Objects understand the concept of a user name
+  //  friendly names on every device.  Since PubNub App Context understand the concept of a user name
   //  (along with other common fields like email and profileUrl), it makes the process straight forward
   const lookupMemberName = async deviceIdentifier => {
     if (friendlyNames[deviceIdentifier] === undefined) {
@@ -292,7 +292,7 @@ const App: () => Node = () => {
 
   /**
    * Button handler for the Edit / Save friendly name button
-   * Persist the friendly name in PubNub object storage (this is the master record)
+   * Persist the friendly name in PubNub App Context storage (this is the master record)
    */
   const handleSaveFriendlyName = async () => {
     if (friendlyNameEditable) {
