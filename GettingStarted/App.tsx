@@ -1,5 +1,12 @@
-import React, {useState, useEffect} from 'react'
-import type {Node} from 'react'
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
+import React, {useState, useEffect} from 'react';
+import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,7 +18,8 @@ import {
   View,
   AppState,
   Image,
-} from 'react-native'
+} from 'react-native';
+
 import styles from './styles.js'
 import * as PubNubKeys from './PubNubKeys.js'
 import DeviceInfo from 'react-native-device-info'
@@ -43,8 +51,9 @@ const pubnub = new PubNub({
   uuid: 'ChangeMe',
 })
 
-const App: () => Node = () => {
-  //  Note: Application does not look different in dark mode
+function App(): JSX.Element {
+
+    //  Note: Application does not look different in dark mode
   //const isDarkMode = useColorScheme() === 'dark'
 
   //  Application state is persisted through hooks
@@ -329,13 +338,14 @@ const App: () => Node = () => {
     pubnub.publish({channel: groupChatChannel, message: input})
   }
 
+
   return (
     <SafeAreaView style={styles.outerContainer}>
       <KeyboardAvoidingView
         style={styles.innerContainer}
         behavior='height'
         keyboardVerticalOffset={Platform.select({
-          ios: 78,
+          ios: 20,
           android: 20,
         })}
       >
@@ -484,7 +494,7 @@ const App: () => Node = () => {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
-  )
+      );
 }
 
-export default App
+export default App;
