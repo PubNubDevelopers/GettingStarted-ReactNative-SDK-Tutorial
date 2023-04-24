@@ -87,6 +87,9 @@ npm run android
 - or iOS: 
 
 ```
+cd ios
+pod install
+cd ../
 npm run ios
 ```
 
